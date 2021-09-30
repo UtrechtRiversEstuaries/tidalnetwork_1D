@@ -1,0 +1,50 @@
+improved status
+27 november 2018
+%difference from previous version
+only to calculate with different slope and longer upstream channel.
+record shields strss for all possible nodal point just in case tides change it
+
+15 January
+ustar used calculation from delft3d
+store ustar
+store theta prime
+modified nodal point for bedload+suspended load
+
+17 January
+add confluence calculation in initial condition
+add option for nodal point calculation. either using total transport to calculate bedslope effect or only bedload
+
+22 january
+in case mod(length,dx) is not zero the modification of channel length is automatically calculated
+
+15 april
+flow computation is ready for channel networks
+
+16 april
+EH predictor has been corrected, adding nodal point for confluence in ini_dia_sedtan_simpang_1
+
+23 april
+can simulate phase difference 
+
+3 May 2019
+Courant criteria in exner equation is added
+
+9 May 2019
+Morfac for original nodal point has been fixed
+
+14 Agustus 2019
+Wang Nodal point relationship is added -> simpang_5.m
+
+14 April 2020
+- Has been cheked that sedtan_3 is used in which beta for vRijn 1984 formulation is 1 and Phi is neglected
+- water level boundary at sea boundary has been fixed so column 1 and 2 is jand j+1 in which in the previous version it was j and j
+- water level boundary can apply more than one tidal consituent by adding script Seaboundary_1.m. In this script you can just add the sinusoidal function of each consituent. The ini_dia file that you have to use is ini_dia_2 and Boyo file: Boyo_V4_overtide
+
+2 december 2020
+- ini_dia, ini_dia_matrix and Boyo test are to check the widening channel simulations
+- the latest version of ini_dia, ini_dia_matrix, Boyo, Sedtan, and Simpang already include multiple tidal components for boundaries, harmonic analysis at the end of simulations, hotstart morphology run, the consistent Shields for sediment transport and nodal point relation, option for constant or changing wetted parameter 
+
+1 January 2021
+bed level in one tidal cycle at the end of the simulation is saved under eta_harm matrices, error in TiMor line 16 has been fixed
+
+
