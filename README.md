@@ -8,6 +8,7 @@ Iwantoro, AP, van der Vegt, M, Kleinhans, MG. Effects of sediment grain size and
 Iwantoro, A. P., van der Vegt, M., & Kleinhans, M. G. (2022). Stability and asymmetry of tide-influenced river bifurcations. Journal of Geophysical Research: Earth Surface, 127, e2021JF006282. https://doi.org/10.1029/2021JF006282
 
 Need a further discussion?
+
 find me here: aryaiwantoro@gmail.com
 
 
