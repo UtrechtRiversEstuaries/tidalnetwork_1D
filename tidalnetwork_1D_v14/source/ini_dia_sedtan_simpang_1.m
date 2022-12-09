@@ -2,21 +2,6 @@
 for channel = 1:Nc
     for i = 1:Nx{channel}
             za{channel}(i,1) = 0.01*(Z{channel}(i,1)-eta{channel}(1,i)); % reference depth to distinguish suspended load and bedload according to van rijn
-             C_salt = sqrt(g/Cd);
-             perc_salt = 1/((10^(C_salt/18))/12);
-             for i = 1:Nx{channel} 
-                 if switchCp ==1 
-                    za{channel}(i) = perc_salt*(Z{channel}(i,1)-eta{channel}(1,i));
-                    za_susp{channel}(i) = 0.01*(Z{channel}(i,1)-eta{channel}(1,i));
-                 elseif switchCp == 0
-                    za{channel}(i) = perc_salt*(Z{channel}(i,1)-eta{channel}(1,i));
-                    za_susp{channel}(i) = 2.5*Sizes(channel,4);
-                 elseif switchCp == 2
-                    za{channel}(i) = perc_salt*(Z{channel}(i,1)-eta{channel}(1,i));
-                    za_susp{channel}(i) = perc_salt*(Z{channel}(i,1)-eta{channel}(1,i));
-                 end
-            
-            
             qf{channel}(i,1) = Q{channel}(i,1)/B{channel}(i);
             
             % in case za~= ks condition must be defined
@@ -26,10 +11,10 @@ for channel = 1:Nc
                     /(Rr*g*Sizes(channel,4)*((-eta{channel}(1,i)+Z{channel}(i,1))^2));
             elseif switchtransp == 2
                 Cf{channel}(i) = 0.24/((log10(12*(-eta{channel}(1,i)+Z{channel}(i,1))/za{channel}(i)))^2);
-                tau{channel}(i) = Cd*(qf{channel}(i)^2)...
-                    /(Rr*g*Sizes(channel,4)*((-eta{channel}(1,i)+Z{channel}(i,1))^2));
+                tau{channel}(i) = 0.125*Cf{channel}(i)*(qf{channel}(i)^2)...
+                            /(Rr*g*Sizes(channel,4)*((-eta{channel}(1,i)+Z{channel}(i,1))^2));
                 miu{channel}(i) = ((18*log10(12*(-eta{channel}(1,i)+Z{channel}(i,1))/za{channel}(i)))...
-                            /(18*log10(12*(-eta{channel}(1,i)+Z{channel}(i,1))/(2.5*Sizes(channel,4)))))^2;
+                            /(18*log10(12*(-eta{channel}(1,i)+Z{channel}(i,1))/(3*2*Sizes(channel,4)))))^2;
                 end
        %EH
        if switchtransp == 1;
@@ -94,13 +79,13 @@ for channel = 1:Nc
                     Zc{channel}(i,1)=20;
                 end
                 if Zc{channel}(i,1) == 1.2
-                    F{channel}(i,1) = (((za_susp{channel}(i,1)/(-eta{channel}(i)+Z{channel}(i,1)))...
-                        /(1-(za_susp{channel}(i,1)/(-eta{channel}(i)+Z{channel}(i,1)))))^1.2)*log(za_susp{channel}(i,1)...
+                    F{channel}(i,1) = (((za{channel}(i,1)/(-eta{channel}(i)+Z{channel}(i,1)))...
+                        /(1-(za{channel}(i,1)/(-eta{channel}(i)+Z{channel}(i,1)))))^1.2)*log(za{channel}(i,1)...
                         /(-eta{channel}(i)+Z{channel}(i,1)));
                 else
-                    F{channel}(i,1) = ((((za_susp{channel}(i,1)/(-eta{channel}(i)+Z{channel}(i,1))))^Zc{channel}(i,1))...
-                        -(((za_susp{channel}(i,1)/(-eta{channel}(i)+Z{channel}(i,1))))^1.2))/...
-                        ((((1-(za_susp{channel}(i,1)/(-eta{channel}(i)+Z{channel}(i,1)))))^1.2)*(1.2-Zc{channel}(i,1)));
+                    F{channel}(i,1) = ((((za{channel}(i,1)/(-eta{channel}(i)+Z{channel}(i,1))))^Zc{channel}(i,1))...
+                        -(((za{channel}(i,1)/(-eta{channel}(i)+Z{channel}(i,1))))^1.2))/...
+                        ((((1-(za{channel}(i,1)/(-eta{channel}(i)+Z{channel}(i,1)))))^1.2)*(1.2-Zc{channel}(i,1)));
                 end
             end
 
@@ -120,65 +105,65 @@ for channel = 1:Nc
             end
         end
     end
-
+    %for nodal point
+    %EH
+% for nodal point
+%      %EH
+%      if switchtransp == 1
+%          for bifur = 1:Nbif
+%              qvRsusnode(bifur,1) = 1;
+%          end
+%      %vRijn 1984    
+%      elseif switchtransp == 2
+%         for bifur = 1:Nbif
+%            if Q{topob{bifur}(1)}(end,1)>=0 && Q{topob{bifur}(2)}(1,1)>=0 && Q{topob{bifur}(3)}(1,1)>=0
+%                 if qb_star{topob{bifur}(1)}(end) == 0 &&  qs_star{topob{bifur}(1)}(end) == 0
+%                     qvRsusnode(bifur,1) = 0;
+%                 else
+%                     qvRsusnode(bifur,1) = 1;%qb_star{topob{bifur}(1)}(end) / (qb_star{topob{bifur}(1)}(end) + qs_star{topob{bifur}(1)}(end));
+%                 end
+%                 
+%            elseif Q{topob{bifur}(1)}(end,1)<0 && Q{topob{bifur}(2)}(1,1)<0 && Q{topob{bifur}(3)}(1,1)>=0
+%                 if qb_star{topob{bifur}(2)}(1) == 0 &&  qs_star{topob{bifur}(2)}(1) == 0
+%                     qvRsusnode(bifur,1) = 0;
+%                 else
+%                     qvRsusnode(bifur,1) = 1;%qb_star{topob{bifur}(2)}(1) / (qb_star{topob{bifur}(2)}(1) + qs_star{topob{bifur}(2)}(1));
+%                 end
+%                
+%            elseif Q{topob{bifur}(1)}(end,1)<0 && Q{topob{bifur}(2)}(1,1)>=0 && Q{topob{bifur}(3)}(1,1)<0
+%                if qb_star{topob{bifur}(3)}(1) == 0 &&  qs_star{topob{bifur}(3)}(1) == 0
+%                     qvRsusnode(bifur,1) = 0;
+%                else
+%                     qvRsusnode(bifur,1) = 1;%qb_star{topob{bifur}(3)}(1) / (qb_star{topob{bifur}(3)}(1) + qs_star{topob{bifur}(3)}(1));
+%                end
+%                            
+%            else
+%                qvRsusnode(bifur,1) = 0;
+%            end
+%         end
+%      end
 
  %% Shields at junctions
-   
-    if Nbif>0
+ if Nbif >0
   for bifur = 1:Nbif
-      if switchtransp==1
-          tau_bolla1(bifur,1) = Cd*(qf{topob{bifur}(1)}(end)^2)...
-                            /(Rr*g*Sizes(channel,4)*((-eta{topob{bifur}(1)}(1,end) +Z{topob{bifur}(1)}(end,1))^2));
-          tau_bolla2(bifur,1) = Cd*(qf{topob{bifur}(2)}(1)^2)...
-                            /(Rr*g*Sizes(channel,4)*((-eta{topob{bifur}(2)}(1,1) +Z{topob{bifur}(2)}(1,1))^2));
-          tau_bolla3(bifur,1) = Cd*(qf{topob{bifur}(3)}(1)^2)...
-                          /(Rr*g*Sizes(channel,4)*((-eta{topob{bifur}(3)}(1,1) +Z{topob{bifur}(3)}(1,1))^2));
-      elseif switchtransp==2
-          if switchnpShi == 0
-              tau_bolla1(bifur,1) = tau_prime{1}(end);
-              tau_bolla2(bifur,1) = tau_prime{2}(1);
-              tau_bolla3(bifur,1) = tau_prime{3}(1);
-          elseif switchnpShi == 1
-                tau_bolla1(bifur,1) = tau{1}(end);
-                tau_bolla2(bifur,1) = tau{2}(1);
-                tau_bolla3(bifur,1) = tau{3}(1);
-          elseif switchnpShi == 2
-                  tau_bolla1(bifur,1) = 1;
-                  tau_bolla2(bifur,1) = 1;
-                  tau_bolla3(bifur,1) = 1;                              
-          end
-          
-      end
+  tau_bolla1(bifur,1) = Cd*(qf{topob{bifur}(1)}(end)^2)...
+                    /(Rr*g*Sizes(channel,4)*((-eta{topob{bifur}(1)}(1,end) +Z{topob{bifur}(1)}(end,1))^2));
+  tau_bolla2(bifur,1) = Cd*(qf{topob{bifur}(2)}(1)^2)...
+                    /(Rr*g*Sizes(channel,4)*((-eta{topob{bifur}(2)}(1,1) +Z{topob{bifur}(2)}(1,1))^2));
+  tau_bolla3(bifur,1) = Cd*(qf{topob{bifur}(3)}(1)^2)...
+                    /(Rr*g*Sizes(channel,4)*((-eta{topob{bifur}(3)}(1,1) +Z{topob{bifur}(3)}(1,1))^2));
   end
  end
  
-  
- if Nconf>0
-      for conflu = 1:Nconf
-          if switchtransp==1
-              tau_bolla1_conf(conflu,1) = Cd*(qf{topoc{conflu}(1)}(end)^2)...
-                                /(Rr*g*Sizes(channel,4)*((-eta{topoc{conflu}(1)}(1,end) +Z{topoc{conflu}(1)}(end,1))^2));
-              tau_bolla2_conf(conflu,1) = Cd*(qf{topoc{conflu}(2)}(end)^2)...
-                                /(Rr*g*Sizes(channel,4)*((-eta{topoc{conflu}(2)}(1,end) +Z{topoc{conflu}(2)}(end,1))^2));
-              tau_bolla3_conf(conflu,1) = Cd*(qf{topoc{conflu}(3)}(1)^2)...
-                                /(Rr*g*Sizes(channel,4)*((-eta{topoc{conflu}(3)}(1,1) +Z{topoc{conflu}(3)}(1,2))^1));
-          elseif switchtransp==2
-              if switchnpShi == 0
-                  tau_bolla1_conf(conflu,1) = tau_prime{1}(end);
-                  tau_bolla2_conf(conflu,1) = tau_prime{2}(end);
-                  tau_bolla3_conf(conflu,1) = tau_prime{3}(1);
-              elseif switchnpShi == 1
-                     tau_bolla1_conf(conflu,1) = tau{1}(end);
-                    tau_bolla2_conf(conflu,1) = tau{2}(end);
-                    tau_bolla3_conf(conflu,1) = tau{3}(1);
-              elseif switchnpShi == 2
-                      tau_bolla1_conf(conflu,1) = 1;
-                      tau_bolla2_conf(conflu,1) = 1;
-                      tau_bolla3_conf(conflu,1) = 1;                              
-              end
-
-          end
-      end
+   if Nconf>0
+  for conflu = 1:Nconf
+  tau_bolla1_conf(conflu,1) = Cd*(qf{topoc{conflu}(1)}(end)^2)...
+                    /(Rr*g*Sizes(channel,4)*((-eta{topoc{conflu}(1)}(1,end) +Z{topoc{conflu}(1)}(end,1))^2));
+  tau_bolla2_conf(conflu,1) = Cd*(qf{topoc{conflu}(2)}(end)^2)...
+                    /(Rr*g*Sizes(channel,4)*((-eta{topoc{conflu}(2)}(1,1) +Z{topoc{conflu}(2)}(1,1))^2));
+  tau_bolla3_conf(conflu,1) = Cd*(qf{topoc{conflu}(3)}(1)^2)...
+                    /(Rr*g*Sizes(channel,4)*((-eta{topoc{conflu}(3)}(1,1) +Z{topoc{conflu}(3)}(1,1))^2));
+  end
  end
  %% nodal point calculation
  if Nbif >0
@@ -474,7 +459,7 @@ for bifur = 1:Nbif
 
          elseif Q{topoc{conf}(1)}(end,1)>=0 && Q{topoc{conf}(2)}(end,1)<0 && Q{topoc{conf}(3)}(1,1)<0
 
-            Qtot{topoc{conf}(2)}(1,1) = (Qtot{topoc{conf}(3)}(1,1))+(-Qtot{topoc{conf}(1)}(end,1));
+            Qtot{topoc{conf}(2)}(end,1) = (Qtot{topoc{conf}(3)}(1,1))+(-Qtot{topoc{conf}(1)}(end,1));
 
          end
 

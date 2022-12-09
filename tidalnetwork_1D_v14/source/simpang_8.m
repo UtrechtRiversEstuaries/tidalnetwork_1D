@@ -30,7 +30,16 @@
   end
  end
  
-
+%   if Nconf>0
+%   for conflu = 1:Nconf
+%   tau_bolla1_conf(conflu,1) = Cd*(qf{topoc{conflu}(1)}(end)^2)...
+%                     /(Rr*g*Sizes(channel,4)*((-eta{topoc{conflu}(1)}(1,end) +Z{topoc{conflu}(1)}(end,2))^2));
+%   tau_bolla2_conf(conflu,1) = Cd*(qf{topoc{conflu}(2)}(end)^2)...
+%                     /(Rr*g*Sizes(channel,4)*((-eta{topoc{conflu}(2)}(1,end) +Z{topoc{conflu}(2)}(end,2))^2));
+%   tau_bolla3_conf(conflu,1) = Cd*(qf{topoc{conflu}(3)}(1)^2)...
+%                     /(Rr*g*Sizes(channel,4)*((-eta{topoc{conflu}(3)}(1,1) +Z{topoc{conflu}(3)}(1,2))^2));
+%   end
+%   end
   
  if Nconf>0
       for conflu = 1:Nconf
@@ -423,7 +432,7 @@
 
          elseif Q{topoc{conf}(1)}(end,2)>=0 && Q{topoc{conf}(2)}(end,2)<0 && Q{topoc{conf}(3)}(1,2)<0
 
-            Qtot{topoc{conf}(2)}(1,2) = (Qtot{topoc{conf}(3)}(1,2))+(-Qtot{topoc{conf}(1)}(end,2));
+            Qtot{topoc{conf}(2)}(end,2) = (Qtot{topoc{conf}(3)}(1,2))+(-Qtot{topoc{conf}(1)}(end,2));
 
          end
 
