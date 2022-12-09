@@ -44,7 +44,24 @@ Wang Nodal point relationship is added -> simpang_5.m
 - ini_dia, ini_dia_matrix and Boyo test are to check the widening channel simulations
 - the latest version of ini_dia, ini_dia_matrix, Boyo, Sedtan, and Simpang already include multiple tidal components for boundaries, harmonic analysis at the end of simulations, hotstart morphology run, the consistent Shields for sediment transport and nodal point relation, option for constant or changing wetted parameter 
 
-1 January 2021
-bed level in one tidal cycle at the end of the simulation is saved under eta_harm matrices, error in TiMor line 16 has been fixed
 
+23 April 2021
+in_dia_matrix_2 line 239: variable discharge can be used for multiple upstream boundaries, TiMor_1 line 16 Qtot(2) -> Qtot(:,2), simpang_8 line 349 Qy should be Qy_conf.
 
+28 April 2021
+suspended sediment and bedload sediment was added for harmonic analysis at the end of simulation in Boyo_V8
+
+29 April 2021
+hotstart can be used for multiple bifurcations in ini_dia_matrix_3. Boyo_V8 applied ini_dia_matrix_3
+
+9 December 2022
+Human error is fixed in simpang_8 line 435 and ini_dia_sedtan_simpang_1 462 from
+Qtot{topoc{conf}(2)}(1,2) = (Qtot{topoc{conf}(3)}(1,2))+(-Qtot{topoc{conf}(1)}(end,2));
+
+Qtot{topoc{conf}(2)}(1,1) = (Qtot{topoc{conf}(3)}(1,1))+(-Qtot{topoc{conf}(1)}(end,1));
+
+to
+
+Qtot{topoc{conf}(2)}(end,2) = (Qtot{topoc{conf}(3)}(1,2))+(-Qtot{topoc{conf}(1)}(end,2));
+
+Qtot{topoc{conf}(2)}(end,1) = (Qtot{topoc{conf}(3)}(1,1))+(-Qtot{topoc{conf}(1)}(end,1));
